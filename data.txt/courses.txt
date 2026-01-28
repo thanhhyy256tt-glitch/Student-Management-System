@@ -1,0 +1,8 @@
+MH001,Lập trình Python,3,hk1
+MH002,Cấu trúc dữ liệu,3,hk1
+MH003,Cơ sở dữ liệu,3,hk2
+MH004,Công nghệ phần mềm,3,hk2
+MH005,Trí tuệ nhân tạo,4,hk1
+MH006,Mạng máy tính,3,hk2
+MH007,Hệ điều hành,4,hk2
+MH008,Phân tích thiết kế hệ thống,3,hk1
