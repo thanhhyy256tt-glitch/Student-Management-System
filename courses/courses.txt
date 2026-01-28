@@ -1,7 +1,0 @@
-CT101,Cấu trúc dữ liệu,3,hk1
-CT02,Ngôn ngữ lập trình Python,3,hk1
-CT03,Cấu trúc rời rạc,4,hk1
-CT04,Quản trị học,2,hk2
-CT05,Phân tích thiết kế giải thuật,2,hk2
-CT06,Pháp luật đại cương,2,hk2
-
