@@ -1,0 +1,29 @@
+STUDENT PORTAL – TEST CASES
+
+TC01 – Login
+Input: student_id = SV01, password
+Expected result: Login successfully
+
+TC02 – Login (wrong password)
+Input: student_id = SV01, wrong password
+Expected result: Login failed
+
+TC03 – Update personal information
+Input: phone, email
+Expected result: Personal information updated successfully
+
+TC04 – Register for courses
+Input: course_id
+Expected result: Course registered successfully
+
+TC05 – Cancel course registration
+Input: course_id
+Expected result: Course registration canceled
+
+TC06 – View grades
+Input: student_id = SV01
+Expected result: Display grade list
+
+TC07 – View assigned courses
+Input: student_id = SV01
+Expected result: Display assigned courses list
