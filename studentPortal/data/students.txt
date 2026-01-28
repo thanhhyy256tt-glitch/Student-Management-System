@@ -1,1 +1,2 @@
 SV01|Nguyen Van A|01/01/2006|Nam|0901234567|a@gmail.com|HCM
+SV02, Tran Thi B, 0911222333, b@gmail.com
