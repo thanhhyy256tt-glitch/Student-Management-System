@@ -1,75 +1,63 @@
-from __future__ import annotations
-from dataclasses import dataclass
+from pathlib import Path
 from storage import Storage
 
-class AuthError(Exception): ...
-class NotFoundError(Exception): ...
-class ValidationError(Exception): ...
+DATA_DIR = Path(__file__).parent / "data"
 
-@dataclass
+
 class StudentPortal:
-    storage: Storage
+    def __init__(self):
+        self.storage = Storage(DATA_DIR)
 
-    # UC1: Login
-    def login(self, username: str, password: str) -> str:
+    # ========= 1. LOGIN =========
+    # accounts.txt format:
+    # username|password|role|student_id
+    # sv01|123|student|SV01
+    def login(self, username: str, password: str):
         rows = self.storage.read_rows("accounts.txt")
-        for u, pw, role, student_id in rows:
-            if u == username and pw == password and role == "student":
+        for r in rows:
+            if len(r) < 4:
+                continue
+            u, p, role, student_id = r
+            if u == username and p == password and role == "student":
                 return student_id
-        raise AuthError("Invalid username/password")
+        return None
 
-    # UC2: Update personal information
-    def update_personal_info(self, student_id: str, full_name: str, dob: str,
-                             gender: str, phone: str, email: str, address: str) -> None:
-        if not full_name.strip():
-            raise ValidationError("Full name is required")
-        parts = dob.split("/")
-        if len(parts) != 3 or not all(p.isdigit() for p in parts):
-            raise ValidationError("DOB must be DD/MM/YYYY")
-        if "@" not in email:
-            raise ValidationError("Invalid email")
+    # ========= 2. UPDATE PERSONAL INFO =========
+    # students.txt: student_id|name|phone|email
+    def update_personal_info(self, student_id, name, phone, email):
+        rows = self.storage.read_rows("students.txt")
+        found = False
 
-        students = self.storage.read_rows("students.txt")
-        for i, s in enumerate(students):
-            if s[0] == student_id:
-                students[i] = [student_id, full_name, dob, gender, phone, email, address]
-                self.storage.write_rows("students.txt", students)
-                return
-        raise NotFoundError("Student not found")
+        for r in rows:
+            if r[0] == student_id:
+                r[1], r[2], r[3] = name, phone, email
+                found = True
 
-    # UC3: Register for courses
-    def register_course(self, student_id: str, course_id: str) -> None:
-        courses = self.storage.read_rows("courses.txt")
-        if not any(c[0] == course_id for c in courses):
-            raise NotFoundError("Course not found")
+        if not found:
+            rows.append([student_id, name, phone, email])
 
-        regs = self.storage.read_rows("registrations.txt")
-        if any(r[0] == student_id and r[1] == course_id for r in regs):
-            raise ValidationError("Already registered")
-        regs.append([student_id, course_id])
-        self.storage.write_rows("registrations.txt", regs)
+        self.storage.write_rows("students.txt", rows)
 
-    # UC4: Cancel course registration
-    def cancel_registration(self, student_id: str, course_id: str) -> None:
-        regs = self.storage.read_rows("registrations.txt")
-        new_regs = [r for r in regs if not (r[0] == student_id and r[1] == course_id)]
-        if len(new_regs) == len(regs):
-            raise NotFoundError("Registration not found")
-        self.storage.write_rows("registrations.txt", new_regs)
+    # ========= 3. REGISTER COURSE =========
+    # registrations.txt: student_id|course_id
+    def register_course(self, student_id, course_id):
+        rows = self.storage.read_rows("registrations.txt")
+        rows.append([student_id, course_id])
+        self.storage.write_rows("registrations.txt", rows)
 
-    # UC5: View grades
-    def view_grades(self, student_id: str) -> list[tuple[str, str]]:
-        grades = self.storage.read_rows("grades.txt")
-        return [(g[1], g[2]) for g in grades if g[0] == student_id]
+    # ========= 4. CANCEL COURSE =========
+    def cancel_course(self, student_id, course_id):
+        rows = self.storage.read_rows("registrations.txt")
+        rows = [r for r in rows if not (r[0] == student_id and r[1] == course_id)]
+        self.storage.write_rows("registrations.txt", rows)
 
-    # UC6: View assigned courses
-    def view_assigned_courses(self, student_id: str) -> list[str]:
-        assigned = self.storage.read_rows("assigned_courses.txt")
-        if assigned:
-            return [a[1] for a in assigned if a[0] == student_id]
-        regs = self.storage.read_rows("registrations.txt")
-        return [r[1] for r in regs if r[0] == student_id]
+    # ========= 5. VIEW GRADES =========
+    # grades.txt: student_id|course_id|grade
+    def view_grades(self, student_id):
+        rows = self.storage.read_rows("grades.txt")
+        return [r for r in rows if r[0] == student_id]
 
-    # Extra: View student list
-    def list_students(self) -> list[list[str]]:
-        return self.storage.read_rows("students.txt")
+    # ========= 6. VIEW ASSIGNED COURSES =========
+    def view_assigned_courses(self, student_id):
+        rows = self.storage.read_rows("registrations.txt")
+        return [r[1] for r in rows if r[0] == student_id]
