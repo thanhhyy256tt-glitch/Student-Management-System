@@ -42,14 +42,21 @@ class StudentPortal:
     # registrations.txt: student_id|course_id
     def register_course(self, student_id, course_id):
         rows = self.storage.read_rows("registrations.txt")
+        for r in rows:
+            if len(r) >= 2 and r[0] == student_id and r[1] == course_id:
+               return False
         rows.append([student_id, course_id])
         self.storage.write_rows("registrations.txt", rows)
+        return True
 
     # ========= 4. CANCEL COURSE =========
     def cancel_course(self, student_id, course_id):
         rows = self.storage.read_rows("registrations.txt")
-        rows = [r for r in rows if not (r[0] == student_id and r[1] == course_id)]
-        self.storage.write_rows("registrations.txt", rows)
+        new_rows = [r for r in rows if not (len(r) >= 2 and r[0] == student_id and r[1] == course_id)]
+        if len(new_rows) == len(rows):
+           return False
+        self.storage.write_rows("registrations.txt", new_rows)
+        return True
 
     # ========= 5. VIEW GRADES =========
     # grades.txt: student_id|course_id|grade
@@ -58,9 +65,10 @@ class StudentPortal:
         return [r for r in rows if r[0] == student_id]
 
     # ========= 6. VIEW ASSIGNED COURSES =========
+    # assigned_courses.txt: student_id|course_id
     def view_assigned_courses(self, student_id):
-        rows = self.storage.read_rows("registrations.txt")
-        return [r[1] for r in rows if r[0] == student_id]
+        rows = self.storage.read_rows("assigned_courses.txt")
+        return [r[1] for r in rows if len(r) >= 2 and r[0] == student_id]
         
     # ========= 7. VIEW STUDENT LIST =========
     # students.txt: student_id|name|phone|email
