@@ -1,29 +1,48 @@
 STUDENT PORTAL – TEST CASES
 
-TC01 – Login
-Input: student_id = SV01, password
-Expected result: Login successfully
+TC01 – Login (success)
+Input: username = sv01, password = 123
+Expected result: Login successfully (student_id = SV01)
 
 TC02 – Login (wrong password)
-Input: student_id = SV01, wrong password
+Input: username = sv01, password = 999
 Expected result: Login failed
 
 TC03 – Update personal information
-Input: phone, email
-Expected result: Personal information updated successfully
+Precondition: Login success as SV01
+Input: name, phone, email
+Expected result: Personal information updated successfully in students.txt
 
-TC04 – Register for courses
+TC04 – Register for courses (new)
+Precondition: Login success as SV01
 Input: course_id
-Expected result: Course registered successfully
+Expected result: Course registered successfully (added to registrations.txt)
 
-TC05 – Cancel course registration
+TC05 – Register for courses (duplicate)
+Precondition: SV01 already registered that course_id
+Input: same course_id
+Expected result: Show “Already registered” / No duplicate row added
+
+TC06 – Cancel course registration (success)
+Precondition: SV01 has registered course_id
 Input: course_id
-Expected result: Course registration canceled
+Expected result: Course registration canceled (removed from registrations.txt)
 
-TC06 – View grades
-Input: student_id = SV01
-Expected result: Display grade list
+TC07 – Cancel course registration (not found)
+Precondition: SV01 has NOT registered course_id
+Input: course_id
+Expected result: Show “Not found”
 
-TC07 – View assigned courses
-Input: student_id = SV01
-Expected result: Display assigned courses list
+TC08 – View grades
+Precondition: grades.txt has rows for SV01
+Input: (none – uses logged in student_id)
+Expected result: Display grade list of SV01
+
+TC09 – View assigned courses
+Precondition: assigned_courses.txt has rows for SV01
+Input: (none – uses logged in student_id)
+Expected result: Display assigned courses list of SV01
+
+TC10 – View student list
+Input: (none)
+Expected result: Display list of students from students.txt
