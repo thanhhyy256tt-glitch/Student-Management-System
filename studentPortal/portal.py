@@ -61,3 +61,14 @@ class StudentPortal:
     def view_assigned_courses(self, student_id):
         rows = self.storage.read_rows("registrations.txt")
         return [r[1] for r in rows if r[0] == student_id]
+        
+    # ========= 7. VIEW STUDENT LIST =========
+    # students.txt: student_id|name|phone|email
+    def view_student_list(self):
+        rows = self.storage.read_rows("students.txt")
+        # trả về list dict cho dễ in
+        return [
+            {"student_id": r[0], "name": r[1], "phone": r[2], "email": r[3]}
+            for r in rows
+            if len(r) >= 4
+        ]
