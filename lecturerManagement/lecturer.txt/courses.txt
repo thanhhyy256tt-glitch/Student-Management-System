@@ -1,3 +1,0 @@
-MH01,Lap trinh Python
-MH02,Co so du lieu
-MH03,Cong nghe phan men

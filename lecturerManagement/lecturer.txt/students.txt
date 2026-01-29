@@ -1,3 +1,0 @@
-SV01,Le Van Nam
-SV02,Pham Thi Hoa
-SV03,Nguyen Thanh Thi
