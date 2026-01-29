@@ -19,7 +19,8 @@ def main():
     print("3. Cancel course")
     print("4. View grades")
     print("5. View assigned courses")
-
+    print("6. View student list")
+    
     choice = input("Choose: ")
 
     if choice == "1":
@@ -45,6 +46,13 @@ def main():
     elif choice == "5":
         print(portal.view_assigned_courses(student_id))
 
+    elif choice == "6":
+        students = portal.view_student_list()
+        if not students:
+            print("No students found")
+        else:
+            for s in students:
+                print(f"{s['student_id']} | {s['name']} | {s['phone']} | {s['email']}")
 
 if __name__ == "__main__":
     main()
